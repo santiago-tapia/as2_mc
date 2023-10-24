@@ -12,7 +12,7 @@ class TimerTickNode: public rclcpp::Node, public mc_Timer, public i_TimerTick
 public:
   TimerTickNode() : rclcpp::Node("timer_tick")
   {
-    init(this, this);
+    mc_Timer::init(this, this);
   }
   
   void timer_tick() override 
