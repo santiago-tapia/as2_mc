@@ -31,6 +31,8 @@ include_directories(
 set(SOURCE_CPP_FILES 
   src/mc_timer.cpp
   src/impl/impl_mc_timer.cpp
+  src/mc_timer_afap.cpp
+  src/impl/impl_mc_timer_afap.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_CPP_FILES} )
