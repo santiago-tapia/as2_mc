@@ -21,24 +21,12 @@ include_directories(
   include/${PROJECT_NAME}
 )
 
-set(SOURCE_CPP_FILES 
-  src/process_input.cpp
-)
-
-add_executable(process_input ${SOURCE_CPP_FILES})
-target_include_directories(process_input PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_compile_features(process_input PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(process_input rclcpp geometry_msgs)
+ament_export_include_directories(include)
 
 install(
   DIRECTORY include/
   DESTINATION include
 )
-
-install(TARGETS process_input
-  DESTINATION lib/${PROJECT_NAME})
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)

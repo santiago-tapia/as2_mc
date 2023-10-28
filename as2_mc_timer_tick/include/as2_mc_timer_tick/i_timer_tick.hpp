@@ -7,6 +7,7 @@ namespace as2 { namespace mc {
 class i_TimerTick 
 {
 public:
+    virtual ~i_TimerTick() {}
     virtual void timer_tick() = 0;
 };
 

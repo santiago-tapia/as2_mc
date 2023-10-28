@@ -20,7 +20,6 @@ public:
         subscription_ = node->create_subscription<Msg>(Id::topic(), 10, f);
     }
 
-
     Msg* operator->() {
         return &state_variable;
     }

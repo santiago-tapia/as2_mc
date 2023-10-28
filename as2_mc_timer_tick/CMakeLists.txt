@@ -5,6 +5,14 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
 
+# set Release as default
+if (NOT CMAKE_BUILD_TYPE)
+  set(CMAKE_BUILD_TYPE Release)
+endif()
+
+#set fPIC to ON by default
+set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
 # find dependencies
 set(PROJECT_DEPENDENCIES
   ament_cmake
@@ -21,25 +29,39 @@ include_directories(
 )
 
 set(SOURCE_CPP_FILES 
-  src/timer_tick.cpp
   src/mc_timer.cpp
   src/impl/impl_mc_timer.cpp
 )
 
-add_executable(timer_tick ${SOURCE_CPP_FILES})
-target_include_directories(timer_tick PUBLIC
-  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-  $<INSTALL_INTERFACE:include>)
-target_compile_features(timer_tick PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
-ament_target_dependencies(timer_tick rclcpp)
+add_library(${PROJECT_NAME} STATIC ${SOURCE_CPP_FILES} )
+target_link_libraries(${PROJECT_NAME} yaml-cpp)
+# target_link_libraries(${PROJECT_NAME} ${GeographicLib_LIBRARIES})
+target_include_directories(${PROJECT_NAME}
+  PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>)
+
+ament_target_dependencies(${PROJECT_NAME} ${PROJECT_DEPENDENCIES})
+ament_export_targets(export_${PROJECT_NAME} HAS_LIBRARY_TARGET)
+ament_export_dependencies(${PROJECT_DEPENDENCIES})
+
+ament_export_include_directories(include)
+ament_export_libraries(${PROJECT_NAME})
+
 
 install(
   DIRECTORY include/
   DESTINATION include
 )
 
-install(TARGETS timer_tick
-  DESTINATION lib/${PROJECT_NAME})
+install(
+  TARGETS ${PROJECT_NAME}
+  EXPORT export_${PROJECT_NAME}
+  ARCHIVE DESTINATION lib
+  LIBRARY DESTINATION lib
+  RUNTIME DESTINATION bin
+  INCLUDES DESTINATION include
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
