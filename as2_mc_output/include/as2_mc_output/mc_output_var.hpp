@@ -9,7 +9,7 @@
 namespace as2 { namespace mc {
 
 template <typename Msg>
-class mc_OutputVar : public mc_Base
+class mc_OutputVar : public mc_OutputBase
 {
 public:
     virtual ~mc_OutputVar() {}
@@ -17,12 +17,12 @@ public:
     using Msg_t = Msg;
     using PublisherSharedPtr = typename rclcpp::Publisher<Msg_t>::SharedPtr;
 
-    void publish() const
+    void publish() const override
     {
         publisher_->publish(state_variable);
     }
 
-    Msg_t* operator->() 
+    Msg_t* value() 
     {
         return &state_variable;
     }

@@ -12,6 +12,13 @@ public:
     virtual void init(rclcpp::Node*) = 0;
 };
 
+class mc_OutputBase : public mc_Base
+{
+public:
+    virtual ~mc_OutputBase() {}
+    virtual void publish() const = 0;
+};
+
 } } // namespace
 
 #endif

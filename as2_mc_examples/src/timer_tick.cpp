@@ -3,20 +3,16 @@
 #include "rclcpp/rclcpp.hpp"
 
 #include "as2_mc_timer_tick/mc_timer.hpp"
-#include "as2_mc_timer_tick/mc_timer_afap.hpp"
 #include "as2_mc_timer_tick/i_timer_tick.hpp"
 
 using namespace as2::mc;
 
-// using TheTimer = mc_Timer;
-using TheTimer = mc_Timer_Afap;
-
-class TimerTickNode: public rclcpp::Node, public TheTimer, public i_TimerTick
+class TimerTickNode: public rclcpp::Node, public mc_Timer, public i_TimerTick
 {
 public:
   TimerTickNode() : rclcpp::Node("timer_tick")
   {
-    TheTimer::init(this, this);
+    mc_Timer::init(this, this);
   }
   
   void timer_tick() override 
