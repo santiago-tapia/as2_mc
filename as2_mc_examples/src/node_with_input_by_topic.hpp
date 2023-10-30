@@ -2,6 +2,8 @@
 #include <functional>
 #include <memory>
 
+#include "the_naming.hpp"
+
 #include "as2_mc_timer_tick/mc_timer.hpp"
 #include "as2_mc_timer_tick/i_timer_tick.hpp"
 
@@ -11,15 +13,6 @@
 using namespace std::chrono_literals;
 
 namespace as2 { namespace mc {
-
-class TheNaming 
-{
-public:
-  static std::string name(size_t) 
-  {
-    return std::string("/as2_mc/example/pose");
-  }
-};
 
 class NodeWithInputByTopic: public rclcpp::Node, public mc_Timer, public i_TimerTick
 {

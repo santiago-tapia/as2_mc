@@ -9,7 +9,6 @@ endif()
 set(PROJECT_DEPENDENCIES
   ament_cmake
   rclcpp
-  geometry_msgs
 )
 
 foreach(DEPENDENCY ${PROJECT_DEPENDENCIES})

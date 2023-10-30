@@ -9,7 +9,7 @@
 
 int main(int argc, char * argv[])
 {
-  std::cout << "Process Input" << std::endl;
+  std::cout << "Process Input/Output" << std::endl;
   rclcpp::init(argc, argv);
 
   rclcpp::executors::SingleThreadedExecutor executor;
