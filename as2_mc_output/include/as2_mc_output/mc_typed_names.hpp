@@ -22,12 +22,11 @@ namespace topics {
     namespace global 
     {
         const rclcpp::QoS qos         = rclcpp::QoS(10);
-        
         const std::string alert_event = "alert_event";
-        // struct AlertEvent { std::string& name = alert_event; using MsgType = as2_msgs::msg::AlertEvent };
 
         struct NotificationOne { inline static const std::string name = "notification_one"; };
         class TypedNotificationOne : public mc_TypedNames<std_msgs::msg::String, NotificationOne, mc_Std_Msgs_String> {};
+        
         struct NotificationTwo { inline static const std::string name = "notification_two"; };
         class TypedNotificationTwo : public mc_TypedNames<std_msgs::msg::String, NotificationTwo, mc_Std_Msgs_String> {};
 
