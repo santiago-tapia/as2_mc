@@ -130,6 +130,8 @@ class UnaClaseImp {
 };
 ```
 
+Ejemplo más completo en: [Código Fuente](https://github.com/santiago-tapia/as2_mc/tree/main/as2_mc_timer_tick). Observese que `impl` NO está en includo sino en `src`.
+
 ---
 
 # Templates y su instanciación
@@ -209,26 +211,75 @@ que tenga: una operación `=` y otra `+`.
     - Te puedes *inventar* que es lo que *requieres*, es decir, el *concept*.
 * Ejemplo en: [Código Fuente](https://github.com/santiago-tapia/as2_mc/tree/main/as2_mc_input/include/as2_mc_input)
 
-* Ejemplo con instanciación 
+* Ejemplos sobre *publishers* (con instanciación)
 * A destacar:
-    - Combina un tipo (alias de tipo) con una `string`
+    - Combina un tipo (alias de tipo) con un dato de tipo `string`
     - Combina templates y no templates
     - Sirve para generar *muchas* clases
 * Ejemplo en: [Código Fuente](https://github.com/santiago-tapia/as2_mc/tree/main/as2_mc_input/include/as2_mc_output)
-
-
 
 ---
 
 # Injección de dependencia
 
+* Dependencia vía herencia:
+    - Es una dependencia *fuerte* y *poco flexible*
+    - Exige la declaración de la clase base (no vale *forward declaration*)
+    - Puede ocasionar el problema del *diamante*
+* Dependencia vía (composición/agregación)
+    - La dependencia se expresa a través de un atributo 
+    - El acoplamiento es más reducido
+    - Se puede usar *forward declaration*
+* DI: Dependency Injection, es una dependencia donde:
+    - Existe un método que *injecta* un objeto de la dependencia
+    - Opcionalmente se guarda como atributo
+    - Se usa para proporcionar la funcionalidad, pero se entiende como 
+    algo *externo* por lo que el acoplamiento es bajo
+* Ejemplo en: [Código Fuente](https://github.com/santiago-tapia/as2_mc/tree/main/as2_mc_timer_tick)
+
+---
+
+# Síncrono vs Asíncrono 
+
+* Leer: [Socket recv](https://pubs.opengroup.org/onlinepubs/7908799/xns/recv.html)
+* Síncrono:
+    - Se **bloquea** la ejecución.
+    - Bloquear significa que se interrumpe la ejecución del hilo y se queda pendiente de 
+    una interrupción a la espera de que se complete alguna operación (por ejemplo, la entrada de
+    un mensaje a través de red).
+* Asíncrono:
+    - La ejecución **no** se bloquea, bien
+    - Se retorna inmediatamente un resultado intermedio o parcial, o bien
+    - Se registra una callback para cuando se pueda obtener el resultado completo (implica concurrencia).
+* Atención:
+    - Las llamadas (clientes) a los *services* de ros2 son asíncronas.
+    - Y los servidores de *services* de ros2 están en una *callback*... No se pueden interpretar
+    como síncronos porque no hay bloqueo.
+
 ---
 
 # Middleware
 
+* (Dibujar: push, pull, ...)
+* La razón de este diseño están en la concurrencia.
+* La sincronización se produce sobre colas de eventos.
+* El push sobre los clientes del middleware implica una *callback* (ros2 subcription)
+* Mientras que el pull puede ser síncrono o asíncrono sin *callback* (ros2 parameters)
+
+---
+
+# Algunas aclaraciones sobre ROS2
+
+* Suponiendo que tenemos 1 hilo de ejecución:
+    - Las *callbacks* son sucesivas, debe acabar una para comenzar la siguiente
+    - Eso
 
 
 ---
 
-# Sobre ROS2 y diseño orientado a objetos
+# Estrategía sobre ROS2 y diseño orientado a objetos
 
+* Cuanto más aislado esté ROS2 mejor (usar DI)
+* Cuanto más se parezca a un programa tipo `main` mejor
+* Cuanto mejor se identifiquen las entradas/salidas mejor
+* Cuanto más modular mejor

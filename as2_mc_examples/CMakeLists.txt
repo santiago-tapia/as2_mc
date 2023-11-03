@@ -9,6 +9,7 @@ endif()
 set(PROJECT_DEPENDENCIES
   ament_cmake
   rclcpp
+  std_srvs
   geometry_msgs
   as2_mc_timer_tick
   as2_mc_input
@@ -57,6 +58,34 @@ target_compile_features(process_input PUBLIC c_std_99 cxx_std_17)  # Require C99
 ament_target_dependencies(process_input ${PROJECT_DEPENDENCIES})
 
 install(TARGETS process_input
+  DESTINATION lib/${PROJECT_NAME})
+
+set(SOURCE_CPP_FILES_BOOL_SERVICE
+  src/bool_service.cpp
+)
+
+add_executable(bool_service ${SOURCE_CPP_FILES_BOOL_SERVICE})
+target_include_directories(bool_service PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(bool_service PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(bool_service ${PROJECT_DEPENDENCIES})
+
+install(TARGETS bool_service
+  DESTINATION lib/${PROJECT_NAME})
+
+set(SOURCE_CPP_FILES_BOOL_CLIENT
+  src/bool_client.cpp
+)
+
+add_executable(bool_client ${SOURCE_CPP_FILES_BOOL_CLIENT})
+target_include_directories(bool_client PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(bool_client PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(bool_client ${PROJECT_DEPENDENCIES})
+
+install(TARGETS bool_client
   DESTINATION lib/${PROJECT_NAME})
 
 install(
