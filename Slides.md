@@ -1,6 +1,12 @@
 
 [//]: # (Comment: Subir esta presentación a https://remarkjs.com/remarkise)
 
+class: center, middle
+
+# C++ y ROS2: revisión
+
+---
+
 # Destructores (virtual)
 
 * Los destructores hay que declararlos virtuales:
@@ -174,11 +180,13 @@ plantilla completa.
 
 # Cosas que se pueden hacer con Templates 
 
-* Las plantillas permiten hacer *polimorfismo*. Por ejemplo:
+* Las plantillas permiten hacer *polimorfismo*, pero en tiempo de **compilación**. 
+Por ejemplo:
 
 ```cpp
 template <typename Iterator>
 Iterator::value_type suma(Iterator first, Iterator last) {
+    if ( first == last ) throw std::runtime_error("Estructura vacía");
     Iterator::value_type resultado = *first;
     ++first;
     for ( ; first != last; ++first ) {
@@ -247,14 +255,12 @@ que tenga: una operación `=` y otra `+`.
     - Bloquear significa que se interrumpe la ejecución del hilo y se queda pendiente de 
     una interrupción a la espera de que se complete alguna operación (por ejemplo, la entrada de
     un mensaje a través de red).
+* Intermedio: se retorna inmediatamente un resultado nulo, intermedio o parcial
 * Asíncrono:
-    - La ejecución **no** se bloquea, bien
-    - Se retorna inmediatamente un resultado intermedio o parcial, o bien
+    - La ejecución **no** se bloquea
     - Se registra una callback para cuando se pueda obtener el resultado completo (implica concurrencia).
-* Atención:
-    - Las llamadas (clientes) a los *services* de ros2 son asíncronas.
-    - Y los servidores de *services* de ros2 están en una *callback*... No se pueden interpretar
-    como síncronos porque no hay bloqueo.
+    - Da origen a todo tipo de estrategías para gestionar las llamadas a las callbacks. Y 
+    comparte problemática y características con los sistemas de eventos propios de las GUI.
 
 ---
 
@@ -263,23 +269,49 @@ que tenga: una operación `=` y otra `+`.
 * (Dibujar: push, pull, ...)
 * La razón de este diseño están en la concurrencia.
 * La sincronización se produce sobre colas de eventos.
-* El push sobre los clientes del middleware implica una *callback* (ros2 subcription)
-* Mientras que el pull puede ser síncrono o asíncrono sin *callback* (ros2 parameters)
+* Respecto de las llamadas:
+    - El push (Middleware -> clientes) implica una *callback* (como en ros2 subcription)
+    - El pull (cliente -> Middleware) puede ser síncrono o asíncrono sin *callback* (como en ros2 parameters)
+    - El push (cliente -> Middleware) suele ser síncrono sin más (como en ros2 publish). Nota: el Middleware se protege frente a concurrencia.
+    - El pull (Middleware -> cliente) no se suele utilizar porque obligaría a proteger todos los clientes frente a concurrencia.
 
 ---
 
-# Algunas aclaraciones sobre ROS2
+# Algunas aclaraciones sobre ROS2 (1)
 
 * Suponiendo que tenemos 1 hilo de ejecución:
-    - Las *callbacks* son sucesivas, debe acabar una para comenzar la siguiente
-    - Eso
+    - Las *callbacks* son sucesivas, debe acabar una para comenzar la siguiente,
+    - Por eso no hace falta proteger frente a concurrencia...
+    - Eso significa que si una callback tarda más de la cuenta parece que el hilo se "bloquea", pero no es cierto porque no está bloqueado, se está *ejecutando* algo que es lento.
+* El modelo de ejecución se ha sacado fuera de los nodos:
+    - Los objetos de la clase `node` aportan **qué** se comunica,
+    - Los objetos de las clases `Executor` aportan métodos para ejecutar las callbacks,
+    - El programador aporta un hilo para ejecutar estos últimos métodos (por defecto el hilo principal de `main`). En `MultiThreadedExecutor` se genera un *pool* de *threads* aparte. 
+    - Ver [diagrama](https://docs.ros.org/en/humble/Concepts/Intermediate/About-Executors.html#scheduling-semantics)
+* Debate: ¿Queremos concurrencia?
 
+# Algunas aclaraciones sobre ROS2 (2)
+
+* Sobre **services**:
+    - Las llamadas (clientes) a los *services* de ros2 son asíncronas. [Prueba](https://github.com/santiago-tapia/as2_mc/blob/main/as2_mc_examples/src/bool_client.cpp)
+    - Y los servidores de *services* de ros2 están en una *callback*... No se pueden interpretar
+    como síncronos porque no hay bloqueo.
+* Sobre **actions**:
+    - Se suponen que lanzan un hilo... [Ver](https://docs.ros.org/en/iron/Tutorials/Beginner-CLI-Tools/Understanding-ROS2-Actions/Understanding-ROS2-Actions.html) Cita: "are intended for long running tasks"
+    - En el documento de [diseño](https://design.ros2.org/articles/actions.html) ver el diagrama
+    de secuencias, "User defined execution method" **es** el hilo de la `action`. Conste que está *mal* dibujado porque se dice que las llamadas son asíncronas en el cliente y las han pintado 
+    como si fuesen síncronas. 
+    - Lanzan un hilo porque una callback con "long running" bloquearía el resto de callbacks...
+    - Ver [ActionServer](https://docs.ros.org/en/iron/Tutorials/Intermediate/Writing-an-Action-Server-Client/Cpp.html#writing-an-action-server) donde se crea el hilo.
+    - En el mismo sitio, ver: los métodos que se usan del `goal_handler`, esos están protegidos
+    frente a concurrencia por un `std::mutex` y son la razón de ser de las `action` es esa protección.
+* Debate: ¿Se corresponden las `action` con nuestras necesidades? IMHO: no.
 
 ---
 
-# Estrategía sobre ROS2 y diseño orientado a objetos
+# Discusión: Estrategía sobre ROS2 y diseño orientado a objetos
 
 * Cuanto más aislado esté ROS2 mejor (usar DI)
 * Cuanto más se parezca a un programa tipo `main` mejor
 * Cuanto mejor se identifiquen las entradas/salidas mejor
-* Cuanto más modular mejor
+* Cuanto más modular mejor (y eso significa evitar la herencia)
