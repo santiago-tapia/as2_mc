@@ -37,7 +37,7 @@ class OperacionFalla {
 ```cpp
 class OperacionFalla {
     void voy_a_fallar() {
-        throw new std::exception("La razón del fallo");
+        throw std::exception("La razón del fallo");
     }
 };
 ```
