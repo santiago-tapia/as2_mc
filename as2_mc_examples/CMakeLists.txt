@@ -46,6 +46,20 @@ ament_target_dependencies(timer_tick ${PROJECT_DEPENDENCIES})
 install(TARGETS timer_tick
   DESTINATION lib/${PROJECT_NAME})
 
+set(SOURCE_CPP_FILES_TIMER_TICK_ABST
+  src/timer_tick_with_abstract.cpp
+)
+
+add_executable(timer_tick_abs ${SOURCE_CPP_FILES_TIMER_TICK_ABST})
+target_include_directories(timer_tick_abs PUBLIC
+  $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+  $<INSTALL_INTERFACE:include>)
+target_compile_features(timer_tick_abs PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
+ament_target_dependencies(timer_tick_abs ${PROJECT_DEPENDENCIES})
+
+install(TARGETS timer_tick_abs
+  DESTINATION lib/${PROJECT_NAME})
+
 set(SOURCE_CPP_FILES_INPUT 
   src/process_input.cpp
 )

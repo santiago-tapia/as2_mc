@@ -33,6 +33,7 @@ set(SOURCE_CPP_FILES
   src/impl/impl_mc_timer.cpp
   src/mc_timer_afap.cpp
   src/impl/impl_mc_timer_afap.cpp
+  src/mc_abstract_timer.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC ${SOURCE_CPP_FILES} )
