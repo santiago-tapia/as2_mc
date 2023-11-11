@@ -43,6 +43,11 @@ target_include_directories(timer_tick PUBLIC
 target_compile_features(timer_tick PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(timer_tick ${PROJECT_DEPENDENCIES})
 
+target_precompile_headers(timer_tick
+  PRIVATE
+    [["rclcpp/rclcpp.hpp"]]
+)
+
 install(TARGETS timer_tick
   DESTINATION lib/${PROJECT_NAME})
 
@@ -56,6 +61,7 @@ target_include_directories(timer_tick_abs PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(timer_tick_abs PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(timer_tick_abs ${PROJECT_DEPENDENCIES})
+target_precompile_headers(timer_tick_abs REUSE_FROM timer_tick)
 
 install(TARGETS timer_tick_abs
   DESTINATION lib/${PROJECT_NAME})
@@ -70,6 +76,7 @@ target_include_directories(process_input PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(process_input PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(process_input ${PROJECT_DEPENDENCIES})
+target_precompile_headers(process_input REUSE_FROM timer_tick)
 
 install(TARGETS process_input
   DESTINATION lib/${PROJECT_NAME})
@@ -84,6 +91,7 @@ target_include_directories(bool_service PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(bool_service PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(bool_service ${PROJECT_DEPENDENCIES})
+target_precompile_headers(bool_service REUSE_FROM timer_tick)
 
 install(TARGETS bool_service
   DESTINATION lib/${PROJECT_NAME})
@@ -98,6 +106,7 @@ target_include_directories(bool_client PUBLIC
   $<INSTALL_INTERFACE:include>)
 target_compile_features(bool_client PUBLIC c_std_99 cxx_std_17)  # Require C99 and C++17
 ament_target_dependencies(bool_client ${PROJECT_DEPENDENCIES})
+target_precompile_headers(bool_client REUSE_FROM timer_tick)
 
 install(TARGETS bool_client
   DESTINATION lib/${PROJECT_NAME})
