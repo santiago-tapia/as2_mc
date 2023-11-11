@@ -247,6 +247,21 @@ que tenga: una operación `=` y otra `+`.
 
 ---
 
+# Agilizar la compilación
+
+* Utilizar ninja en vez de make:
+    - ninja-build es un sistema de compilación más ágil que make,
+    - especialmente en compilaciones incrementales.
+* Utilizar cabeceras precompiladas:
+    - Cuando un (.h|.hpp) se incluye en varios .cpp se compila **todas** las veces (una y otra vez)
+    - Una cabecera precompilada es el resultado de compilar un archivo de cabeceras para generar
+    un archivo equivalente a su compilación y no tener que compilar una y otra vez
+    - Cuando se incluye un archivo el compilador detecta que existe la cabecera y la usa en vez 
+    tener que volver a compilar todo.
+    - Especialmente útil para "rclcpp/rclcpp.hpp", ver CMakeLists.txt en as2_mc_examples
+
+---
+
 # Síncrono vs Asíncrono 
 
 * Leer: [Socket recv](https://pubs.opengroup.org/onlinepubs/7908799/xns/recv.html)
