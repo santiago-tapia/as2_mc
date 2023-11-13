@@ -1,16 +1,24 @@
 # as2_mc
+
 Aerostack 2 Modular Classes
 
-# Compiling with ninja-build
+This repository is a **Sandbox** for playing arround designs arround ROS2.
+
+There is NO intention to supply any usable piece of software, the intention
+is make designs (and alternative designs) to study how to carry out some
+ideas about software architecture relative to systems based on ROS2.
+
+## Compiling with ninja-build
 
 Ninja is a fast compiling builder.
 
-## Installing:
+### Installing:
 
 ```bash
 sudo apt install ninja-build
 ```
-## Use:
+
+### Use:
 
 Do:
 
