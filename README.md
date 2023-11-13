@@ -5,7 +5,7 @@ Aerostack 2 Modular Classes
 This repository is a **Sandbox** for playing arround designs arround ROS2.
 
 There is NO intention to supply any usable piece of software, the intention
-is make designs (and alternative designs) to study how to carry out some
+is making designs (and alternative designs) to study how to carry out some
 ideas about software architecture relative to systems based on ROS2.
 
 ## Compiling with ninja-build
