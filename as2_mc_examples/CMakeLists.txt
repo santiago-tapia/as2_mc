@@ -5,20 +5,13 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -Winvalid-pch)
 endif()
 
-# Check for ROS VERSION
-#if(DEFINED ENV{HOLA})
-  #message(STATUS "Hola: $ENV{HOLA}")
-if(DEFINED ENV{AMENT_CURRENT_PREFIX})
-  message(STATUS "$ENV{AMENT_CURRENT_PREFIX} found")
-  if("$ENV{AMENT_CURRENT_PREFIX}" MATCHES ".*/humble")
-    add_compile_definitions(ROS_MAJOR_VERSION_HUMBLE)
-  elseif("$ENV{AMENT_CURRENT_PREFIX}" MATCHES ".*/galactic")
-    add_compile_definitions(ROS_MAJOR_VERSION_GALACTIC)
-  else()
-    message(FATAL_ERROR "$ENV{AMENT_CURRENT_PREFIX} is not supported")
-  endif()
+# Check if tf2_geometry_msgs.hpp exists
+if(EXISTS "/opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp")
+  message(STATUS "tf2_geometry_msgs.hpp found")
+  add_compile_definitions(ROS_INCLUDE_TF2_GEOMETRY_HPP)
 else()
-  message(FATAL_ERROR "AMENT_CURRENT_PREFIX was not found, please source underlay before building")
+  message(STATUS "tf2_geometry_msgs.hpp not found")
+  add_compile_definitions(ROS_INCLUDE_TF2_GEOMETRY_H)
 endif()
 
 # find dependencies

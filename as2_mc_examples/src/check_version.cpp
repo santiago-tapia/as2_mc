@@ -1,8 +1,8 @@
 
 #include <iostream>
  
-#ifdef ROS_MAJOR_VERSION_HUMBLE 
+#ifdef ROS_INCLUDE_TF2_GEOMETRY_HPP 
 #include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
-#elif defined(ROS_MAJOR_VERSION_GALACTIC)
+#else
 #include <tf2_geometry_msgs/tf2_geometry_msgs.h>
 #endif
