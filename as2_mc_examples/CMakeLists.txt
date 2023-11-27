@@ -5,6 +5,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic -Winvalid-pch)
 endif()
 
+# Output ros distro
+message(STATUS "$ENV{ROS_DISTRO} found")
+
 # Check if tf2_geometry_msgs.hpp exists
 if(EXISTS "/opt/ros/humble/include/tf2_geometry_msgs/tf2_geometry_msgs/tf2_geometry_msgs.hpp")
   message(STATUS "tf2_geometry_msgs.hpp found")
